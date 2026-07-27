@@ -7,5 +7,5 @@
 
 class FileReader {
 public:
-    static const std::string &ReadFile(const std::string &filePath);
+    static std::string ReadFile(const std::string &filePath);
 };

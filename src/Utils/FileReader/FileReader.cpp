@@ -1,6 +1,6 @@
 #include "FileReader.h"
 
-const std::string &FileReader::ReadFile(const std::string &filePath) {
+std::string FileReader::ReadFile(const std::string &filePath) {
     static const std::string empty = "";
     std::ifstream file(filePath);
     if(!file) {
@@ -12,7 +12,7 @@ const std::string &FileReader::ReadFile(const std::string &filePath) {
         std::stringstream buffer;
         buffer << file.rdbuf();
         file.close();
-        static const std::string content = buffer.str();
+        std::string content = buffer.str();
         return content;
     } catch(std::ifstream::failure &exception) {
         std::cerr << "Error reading from file: " << exception.what() << std::endl;

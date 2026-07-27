@@ -7,7 +7,7 @@ SET(CMAKE_CXX_STANDARD 20)
 SET(CMAKE_CXX_STANDARD_REQUIRED ON)
 SET(CMAKE_CXX_EXTENSIONS ON)
 
-SET(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+FILE(COPY ${CMAKE_SOURCE_DIR}/resources DESTINATION ${CMAKE_BINARY_DIR})
 
 LINK_DIRECTORIES(${CMAKE_SOURCE_DIR}/lib)
 
@@ -30,8 +30,23 @@ SET(UTILS
     ${FILE_READER}
 )
 
+SET(SHADER
+    "src/Shader/Shader.h"
+    "src/Shader/Shader.cpp"
+    "src/Shader/ShaderProgram.h"
+    "src/Shader/ShaderProgram.cpp"
+    "src/Shader/ShaderProgramUniforms.cpp"
+    "src/Shader/ShaderUniforms.h"
+    "src/Shader/ShaderUniforms.cpp"
+)
+
+SET(ENGINE
+    ${SHADER}
+)
+
 SET(SOURCE
     ${UTILS}
+    ${ENGINE}
     "src/main.cpp"
 )
 
@@ -49,3 +64,13 @@ ENDIF()
 IF(CMAKE_BUILD_TYPE STREQUAL "Debug")
     MESSAGE(STATUS "Debug mode enabled")
 ENDIF()
+
+IF(CMAKE_EXPORT_COMPILE_COMMANDS)
+    FILE(CREATE_LINK
+        "${CMAKE_BINARY_DIR}/compile_commands.json"
+        "${CMAKE_SOURCE_DIR}/build/compile_commands.json"
+        SYMBOLIC
+    )
+    MESSAGE(STATUS "Compile Commands symbolic link created")
+ENDIF()
+
