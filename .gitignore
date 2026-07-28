@@ -1,3 +1,5 @@
 /build
 /lib
 /.cache
+.gdb_history
+.clang-format
