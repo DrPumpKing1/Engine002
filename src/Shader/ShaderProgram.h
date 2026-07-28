@@ -2,6 +2,7 @@
 
 #include "Shader.h"
 #include "ShaderUniforms.h"
+#include "UniformBlock.h"
 
 #include <unordered_map>
 
@@ -9,6 +10,7 @@ class ShaderProgram {
     private:
         GLuint ID;
         std::unordered_map<ShaderType, Shader> attachments;
+        std::vector<ShaderUniformBlockBinding> uniformBlocks;
         ShaderUniforms uniforms;
 
         bool compiled;
@@ -43,6 +45,7 @@ class ShaderProgram {
         void SetMat3(const std::string &name, const glm::mat3 &mat) const;
         void SetMat4(const std::string &name, const glm::mat4 &mat) const;
 
+        void BindUniformBlock(GLuint bindingPoint, const std::string &blockName);
     private:
         void CheckLinkErrors() const;
 

@@ -7,8 +7,12 @@ out VS_OUT {
     vec2 TexCoords;
 } vs_out;
 
-uniform mat4 view;
-uniform mat4 projection;
+layout(std140, binding = 0) uniform CameraData {
+    mat4 view;
+    mat4 projection;
+    vec3 viewPosition;
+};
+
 uniform mat4 model;
 
 void main() {

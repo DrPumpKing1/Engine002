@@ -38,10 +38,18 @@ SET(SHADER
     "src/Shader/ShaderProgramUniforms.cpp"
     "src/Shader/ShaderUniforms.h"
     "src/Shader/ShaderUniforms.cpp"
+    "src/Shader/UniformBlock.h"
+    "src/Shader/UniformBlock.cpp"
+)
+
+SET(CAMERA
+    "src/Camera/Camera.h"
+    "src/Camera/Camera.cpp"
 )
 
 SET(ENGINE
     ${SHADER}
+    ${CAMERA}
 )
 
 SET(SOURCE
@@ -57,12 +65,9 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${LIBS})
 
 TARGET_INCLUDE_DIRECTORIES(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/includes)
 
-IF(MSVC)
-    TARGET_COMPILE_DEFINITIONS($<$<CONFIG:Debug>:DEBUG>)
-ENDIF()
-
 IF(CMAKE_BUILD_TYPE STREQUAL "Debug")
     MESSAGE(STATUS "Debug mode enabled")
+    TARGET_COMPILE_DEFINITIONS(${PROJECT_NAME} PUBLIC DEBUG)
 ENDIF()
 
 IF(CMAKE_EXPORT_COMPILE_COMMANDS)

@@ -8,6 +8,7 @@ ShaderProgram::ShaderProgram() : compiled(false), error(false) {
 
 ShaderProgram::~ShaderProgram() {
     attachments.clear();
+    uniformBlocks.clear();
     glDeleteProgram(ID);
 }
 
@@ -17,6 +18,7 @@ ShaderProgram::ShaderProgram(const ShaderProgram &other) {
         compiled = false;
         error = false;
         uniforms.SetShaderProgram(0);
+        uniformBlocks.clear();
     } else {
         ID = glCreateProgram();
         uniforms.SetShaderProgram(ID);
@@ -24,8 +26,12 @@ ShaderProgram::ShaderProgram(const ShaderProgram &other) {
             Shader copyShader = shader;
             AttachShader(std::move(copyShader));
         }
-        if(other.HasBeenCompiled())
+        if(other.HasBeenCompiled()) {
             Compile();
+            for(const auto &binding : other.uniformBlocks) {
+                BindUniformBlock(binding.bindingPoint, binding.uniformBlockName);
+            }
+        }
     }
 }
 
@@ -36,6 +42,7 @@ ShaderProgram& ShaderProgram::operator=(const ShaderProgram &other) {
     glDeleteProgram(ID);
     compiled = false;
     error = false;
+    uniformBlocks.clear();
 
     if(!other.IsValid()) {
         ID = 0;
@@ -48,8 +55,12 @@ ShaderProgram& ShaderProgram::operator=(const ShaderProgram &other) {
             Shader copyShader = shader;
             AttachShader(std::move(copyShader));
         }
-        if(other.HasBeenCompiled())
+        if(other.HasBeenCompiled()) {
             Compile();
+            for(const auto &binding : other.uniformBlocks) {
+                BindUniformBlock(binding.bindingPoint, binding.uniformBlockName);
+            }
+        }
         uniforms.SetShaderProgram(ID);
     }
 
@@ -62,9 +73,11 @@ ShaderProgram::ShaderProgram(ShaderProgram &&other) noexcept {
         compiled = false;
         error = false;
         uniforms.SetShaderProgram(0);
+        uniformBlocks.clear();
     } else {
         ID = other.ID;
         attachments = std::move(other.attachments);
+        uniformBlocks = std::move(other.uniformBlocks);
         compiled = other.compiled;
         error = other.error;
         uniforms.SetShaderProgram(ID);
@@ -83,6 +96,7 @@ ShaderProgram& ShaderProgram::operator=(ShaderProgram &&other) noexcept {
     glDeleteProgram(ID);
     compiled = false;
     error = false;
+    uniformBlocks.clear();
 
     if(!other.IsValid()) {
         ID = 0;
@@ -92,6 +106,7 @@ ShaderProgram& ShaderProgram::operator=(ShaderProgram &&other) noexcept {
     } else {
         ID = other.ID;
         attachments = std::move(other.attachments);
+        uniformBlocks = std::move(other.uniformBlocks);
         compiled = other.compiled;
         error = other.error;
         uniforms.SetShaderProgram(ID);
@@ -128,11 +143,37 @@ void ShaderProgram::Compile() {
 }
 
 void ShaderProgram::Bind() const {
+    if(error || !HasBeenCompiled() || !IsValid()) {
+        std::cout << "WARNING::SHADER_PROGRAM_BIND is not suitable for using";
+        return;
+    }
     glUseProgram(ID);
 }
 
 void ShaderProgram::Unbind() {
     glUseProgram(0);
+}
+
+void ShaderProgram::BindUniformBlock(GLuint bindingPoint, const std::string &blockName) {
+    if(!IsValid()) {
+        std::cout << "WARNING_SHADER_PROGRAM_BIND_UNIFORM_BLOCK shader program is not valid, uniform block binding aborted" << std::endl;
+        return;
+    }
+    if(!HasBeenCompiled()) {
+        std::cout << "WARNING_SHADER_PROGRAM_BIND_UNIFORM_BLOCK shader program has not been compiled yet, uniform block binding aborted" << std::endl;
+        return;
+    }
+#ifdef DEBUG
+    for(const auto &binding : uniformBlocks) {
+        if(bindingPoint == binding.bindingPoint)
+            std::cout << "WARNING::SHADER_PROGRAM_BIND_UNIFORM_BLOCK uniform block of name: " << binding.uniformBlockName << " is already binded to binding point: " << bindingPoint << ", overwrite binding point with uniform block of name: " << blockName << std::endl;
+        if(blockName == binding.uniformBlockName)
+            std::cout << "WARNING::SHADER_PROGRAM_BIND_UNIFORM_BLOCK there's already a uniform block of name: " << binding.uniformBlockName << " binded in the shader program" << std::endl;
+    }
+#endif
+    GLuint blockIndex = glGetUniformBlockIndex(ID, blockName.c_str());
+    glUniformBlockBinding(ID, blockIndex, bindingPoint);
+    uniformBlocks.push_back(ShaderUniformBlockBinding{bindingPoint, blockIndex, blockName});
 }
 
 void ShaderProgram::CheckLinkErrors() const {
