@@ -13,7 +13,6 @@
 #include <filesystem>
 #include <iostream>
 
-#include "Camera/Camera.h"
 #include "Engine.h"
 
 const unsigned int samples {4};
@@ -37,7 +36,7 @@ float lastCursorY{HEIGHT / 2.0f};
 bool firstCursorClick{true};
 bool cursorInGame{false};
 
-static const float cubeVertices[] = {
+static const std::vector<float> cubeVertices = {
     -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
     0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
@@ -64,18 +63,12 @@ static const float cubeVertices[] = {
     -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
 };
 
-static const unsigned int cubeIndices[] = {
-    // back  (z = -0.5)  -> normal -Z  (invertido)
+static const std::vector<unsigned int> cubeIndices = {
     0,  2,  1,   2,  0,  3,
-    // front (z = +0.5)  -> normal +Z  (ya estaba OK)
     4,  5,  6,   6,  7,  4,
-    // left  (x = -0.5)  -> normal -X  (ya estaba OK)
     8,  9,  10,  10, 11, 8,
-    // right (x = +0.5)  -> normal +X  (invertido)
     12, 14, 13,  14, 12, 15,
-    // bottom(y = -0.5)  -> normal -Y  (ya estaba OK)
     16, 17, 18,  18, 19, 16,
-    // top   (y = +0.5)  -> normal +Y  (invertido)
     20, 22, 21,  22, 20, 23
 };
 
@@ -109,24 +102,9 @@ int main(void) {
   }
 
   {
-      GLuint VAO, VBO, EBO;
-      glCreateVertexArrays(1, &VAO);
-      glCreateBuffers(1, &VBO);
-      glCreateBuffers(1, &EBO);
-
-      glNamedBufferStorage(VBO, sizeof(cubeVertices), cubeVertices, 0);
-      glNamedBufferStorage(EBO, sizeof(cubeIndices), cubeIndices, 0);
-
-      glVertexArrayVertexBuffer(VAO, 0, VBO, 0, 5 * sizeof(float));
-      glVertexArrayElementBuffer(VAO, EBO);
-
-      glEnableVertexArrayAttrib(VAO, 0);
-      glVertexArrayAttribFormat(VAO, 0, 3, GL_FLOAT, GL_FALSE, 0);
-      glVertexArrayAttribBinding(VAO, 0, 0);
-
-      glEnableVertexArrayAttrib(VAO, 1);
-      glVertexArrayAttribFormat(VAO, 1, 2, GL_FLOAT, GL_FALSE, 3 * sizeof(float));
-      glVertexArrayAttribBinding(VAO, 1, 0);
+      VertexLayout layout = VertexAttribute::GetVertexLayout(Vertex3DUnlit);
+      Mesh mesh(layout, cubeVertices, cubeIndices);
+      const DrawInfo &draw = mesh.GetDrawInfo();
 
       std::filesystem::path shadersPath = std::filesystem::current_path() / "resources" / "shaders";
       std::filesystem::path vertexShaderPath = shadersPath / "test.vs";
@@ -175,9 +153,9 @@ int main(void) {
           cameraMatrices.Bind();
           program.SetMat4("model", model);
 
-          glBindVertexArray(VAO);
-          glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-          glBindVertexArray(0);
+          mesh.Bind();
+          glDrawElements(GL_TRIANGLES, draw.indices, GL_UNSIGNED_INT, 0);
+          Mesh::Unbind();
 
           glfwSwapBuffers(window);
 

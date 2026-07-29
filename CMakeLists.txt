@@ -47,9 +47,17 @@ SET(CAMERA
     "src/Camera/Camera.cpp"
 )
 
+SET(MESH
+    "src/Mesh/VertexAttribute.h"
+    "src/Mesh/VertexAttribute.cpp"
+    "src/Mesh/Mesh.h"
+    "src/Mesh/Mesh.cpp"
+)
+
 SET(ENGINE
     ${SHADER}
     ${CAMERA}
+    ${MESH}
 )
 
 SET(SOURCE
