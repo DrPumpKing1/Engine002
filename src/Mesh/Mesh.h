@@ -36,5 +36,9 @@ class Mesh {
         const DrawInfo &GetDrawInfo() const { return draw; }
 
     private:
-        void Initialize();
+        bool CreateBuffers(const Mesh *source);
+        void SetupVertexArrayLayout();
+        void Release();
+
+        bool IsValid() const;
 };
