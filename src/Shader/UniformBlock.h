@@ -34,7 +34,7 @@ class UniformBlock {
 
     private:
         bool IsValid() const;
-        void Initialize(const void *data);
+        void SetupStorage(const void *data);
 };
 
 struct ShaderUniformBlockBinding {

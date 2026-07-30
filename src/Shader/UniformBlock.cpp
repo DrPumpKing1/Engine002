@@ -1,6 +1,5 @@
 #include "UniformBlock.h"
 #include <iostream>
-#include "Shader.h"
 
 UniformBlock::UniformBlock(const std::string &name, GLuint bindingPoint, size_t size, const void *data) : name(name), bindingPoint(bindingPoint), size(size), lazy(false) {
     if(size == 0) {
@@ -9,7 +8,7 @@ UniformBlock::UniformBlock(const std::string &name, GLuint bindingPoint, size_t 
         lazy = true;
         return;
     }
-    Initialize(data);
+    SetupStorage(data);
 }
 
 UniformBlock::~UniformBlock() {
@@ -88,7 +87,7 @@ void UniformBlock::UpdateData(const void *data, size_t dataSize, size_t offset) 
     }
     if(lazy) {
         size = dataSize + offset;
-        Initialize(nullptr);
+        SetupStorage(nullptr);
     } else if(!IsValid()) {
         std::cout << "WARNING::UNIFORM_BLOCK_UPDATE_DATA of name: " << name << " is not valid to update, aborting update." << std::endl; 
         return;
@@ -104,7 +103,7 @@ bool UniformBlock::IsValid() const {
     return ID != 0;
 }
 
-void UniformBlock::Initialize(const void *data) {
+void UniformBlock::SetupStorage(const void *data) {
     lazy = false;
     glCreateBuffers(1, &ID);
     glNamedBufferStorage(ID, size, data, GL_DYNAMIC_STORAGE_BIT);
