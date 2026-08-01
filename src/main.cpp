@@ -157,10 +157,12 @@ int main(void) {
           glDrawElements(GL_TRIANGLES, draw.indices, GL_UNSIGNED_INT, 0);
           Mesh::Unbind();
 
+
           glfwSwapBuffers(window);
 
           glfwPollEvents();
       }
+      GetError();
   }
 
   glfwTerminate();

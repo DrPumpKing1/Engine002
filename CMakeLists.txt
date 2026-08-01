@@ -26,8 +26,14 @@ SET(FILE_READER
     "src/Utils/FileReader/FileReader.cpp"
 )
 
+SET(DEBUG_SRC
+    "src/Utils/Debug/Debug.h"
+    "src/Utils/Debug/Debug.cpp"
+)
+
 SET(UTILS 
     ${FILE_READER}
+    ${DEBUG_SRC}
 )
 
 SET(SHADER
