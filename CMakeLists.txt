@@ -34,36 +34,38 @@ SET(DEBUG_SRC
 SET(UTILS 
     ${FILE_READER}
     ${DEBUG_SRC}
+    "src/Utils/Utils.h"
 )
 
 SET(SHADER
-    "src/Shader/Shader.h"
-    "src/Shader/Shader.cpp"
-    "src/Shader/ShaderProgram.h"
-    "src/Shader/ShaderProgram.cpp"
-    "src/Shader/ShaderProgramUniforms.cpp"
-    "src/Shader/ShaderUniforms.h"
-    "src/Shader/ShaderUniforms.cpp"
-    "src/Shader/UniformBlock.h"
-    "src/Shader/UniformBlock.cpp"
+    "src/Engine/Shader/Shader.h"
+    "src/Engine/Shader/Shader.cpp"
+    "src/Engine/Shader/ShaderProgram.h"
+    "src/Engine/Shader/ShaderProgram.cpp"
+    "src/Engine/Shader/ShaderProgramUniforms.cpp"
+    "src/Engine/Shader/ShaderUniforms.h"
+    "src/Engine/Shader/ShaderUniforms.cpp"
+    "src/Engine/Shader/UniformBlock.h"
+    "src/Engine/Shader/UniformBlock.cpp"
 )
 
 SET(CAMERA
-    "src/Camera/Camera.h"
-    "src/Camera/Camera.cpp"
+    "src/Engine/Camera/Camera.h"
+    "src/Engine/Camera/Camera.cpp"
 )
 
 SET(MESH
-    "src/Mesh/VertexAttribute.h"
-    "src/Mesh/VertexAttribute.cpp"
-    "src/Mesh/Mesh.h"
-    "src/Mesh/Mesh.cpp"
+    "src/Engine/Mesh/VertexAttribute.h"
+    "src/Engine/Mesh/VertexAttribute.cpp"
+    "src/Engine/Mesh/Mesh.h"
+    "src/Engine/Mesh/Mesh.cpp"
 )
 
 SET(ENGINE
     ${SHADER}
     ${CAMERA}
     ${MESH}
+    "src/Engine/Engine.h"
 )
 
 SET(SOURCE

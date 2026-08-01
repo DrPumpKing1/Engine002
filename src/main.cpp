@@ -13,7 +13,8 @@
 #include <filesystem>
 #include <iostream>
 
-#include "Engine.h"
+#include "Engine/Engine.h"
+#include "Utils/Utils.h"
 
 const unsigned int samples {4};
 const unsigned int WIDTH{800};

@@ -1,5 +1,5 @@
 #include "Shader.h"
-#include "../Utils/FileReader/FileReader.h"
+#include "../../Utils/FileReader/FileReader.h"
 
 std::string ShaderTypeToString(const ShaderType &type) {
     switch (type) {
