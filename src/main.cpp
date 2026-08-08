@@ -14,6 +14,7 @@
 #include <iostream>
 
 #include "Engine/Engine.h"
+#include "Engine/Mesh/VertexAttribute.h"
 #include "Utils/Utils.h"
 
 const unsigned int samples {4};
@@ -36,42 +37,6 @@ float lastCursorX{WIDTH / 2.0f};
 float lastCursorY{HEIGHT / 2.0f};
 bool firstCursorClick{true};
 bool cursorInGame{false};
-
-static const std::vector<float> cubeVertices = {
-    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-    0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-    0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-    0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-    0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-    -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-    -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-    0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-    0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-    0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-    0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-    0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-    0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-    0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-    0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-    -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-};
-
-static const std::vector<unsigned int> cubeIndices = {
-    0,  2,  1,   2,  0,  3,
-    4,  5,  6,   6,  7,  4,
-    8,  9,  10,  10, 11, 8,
-    12, 14, 13,  14, 12, 15,
-    16, 17, 18,  18, 19, 16,
-    20, 22, 21,  22, 20, 23
-};
 
 int main(void) {
   if (!glfwInit()) {
@@ -103,8 +68,8 @@ int main(void) {
   }
 
   {
-      VertexLayout layout = VertexAttribute::GetVertexLayout(Vertex3DUnlit);
-      Mesh mesh(layout, cubeVertices, cubeIndices);
+      Sphere sphere = Sphere(Vertex3DUnlit, 1.0f, 32, 32);
+      const Mesh &mesh = sphere.GetMesh();
       const DrawInfo &draw = mesh.GetDrawInfo();
 
       std::filesystem::path shadersPath = std::filesystem::current_path() / "resources" / "shaders";
@@ -145,7 +110,7 @@ int main(void) {
 
           glm::mat4 model(1.0f);
           model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
-          model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+          model = glm::scale(model, glm::vec3(1.0f + std::cos(glm::radians(currentTime * 0.5f)), 1.0f + std::sin(glm::radians(currentTime * 2.0f)), 1.0f));
           model = glm::rotate(model, glm::radians(45.0f * currentTime), glm::vec3(1.0, 1.0, 0.0));
 
           glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

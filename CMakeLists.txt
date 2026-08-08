@@ -63,10 +63,18 @@ SET(MESH
     "src/Engine/Mesh/Mesh.cpp"
 )
 
+SET(PRIMITIVE
+    "src/Engine/Primitive/Primitive.h"
+    "src/Engine/Primitive/Shape.h"
+    "src/Engine/Primitive/Sphere.h"
+    "src/Engine/Primitive/Sphere.cpp"
+)
+
 SET(ENGINE
     ${SHADER}
     ${CAMERA}
     ${MESH}
+    ${PRIMITIVE}
     "src/Engine/Engine.h"
 )
 

@@ -21,6 +21,7 @@ class Mesh {
         DrawInfo draw;
 
     public:
+        Mesh();
         Mesh(const VertexLayout &layout, const std::vector<float> &vertices, const std::vector<unsigned int> &indices, unsigned int instances = 0);
         ~Mesh();
 

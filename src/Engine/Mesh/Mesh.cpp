@@ -1,5 +1,8 @@
 #include "Mesh.h"
 #include <iostream>
+#include "VertexAttribute.h"
+
+Mesh::Mesh() : VAO(0), VBO(0), EBO(0), instances(0) {}
 
 Mesh::Mesh(const VertexLayout &layout, const std::vector<float> &vertices, const std::vector<unsigned int> &indices, unsigned int instances) : layout(layout), vertices(vertices), indices(indices), instances(instances) {
     if(!CreateBuffers(nullptr)) {
