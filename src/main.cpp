@@ -14,7 +14,6 @@
 #include <iostream>
 
 #include "Engine/Engine.h"
-#include "Engine/Mesh/VertexAttribute.h"
 #include "Utils/Utils.h"
 
 const unsigned int samples {4};
@@ -68,8 +67,10 @@ int main(void) {
   }
 
   {
-      Sphere sphere = Sphere(Vertex3DUnlit, 1.0f, 32, 32);
-      const Mesh &mesh = sphere.GetMesh();
+      Sphere sphere(Vertex3DUnlit, 1.0f, 32, 32);
+      Cylinder cylinder(Vertex3DUnlit, 1.0f, 2.5f, 32, 32);
+      Cube cube(Vertex3DUnlit, 2.0f, 16, 16, 16);
+      const Mesh &mesh = cube.GetMesh();
       const DrawInfo &draw = mesh.GetDrawInfo();
 
       std::filesystem::path shadersPath = std::filesystem::current_path() / "resources" / "shaders";
@@ -95,6 +96,10 @@ int main(void) {
       glEnable(GL_MULTISAMPLE);
 
       glClearColor(0.8f, 0.6f, 1.0f, 1.0f);
+
+      //Uncomment for drawing as wireframe
+      //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
       while (!glfwWindowShouldClose(window)) {
           float currentTime = static_cast<float>(glfwGetTime());
           deltaTime = currentTime - lastTime;
@@ -110,7 +115,7 @@ int main(void) {
 
           glm::mat4 model(1.0f);
           model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
-          model = glm::scale(model, glm::vec3(1.0f + std::cos(glm::radians(currentTime * 0.5f)), 1.0f + std::sin(glm::radians(currentTime * 2.0f)), 1.0f));
+          //model = glm::scale(model, glm::vec3(1.0f + std::cos(glm::radians(currentTime * 0.5f)), 1.0f + std::sin(glm::radians(currentTime * 2.0f)), 1.0f));
           model = glm::rotate(model, glm::radians(45.0f * currentTime), glm::vec3(1.0, 1.0, 0.0));
 
           glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

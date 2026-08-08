@@ -17,6 +17,7 @@ class Shape {
         const Mesh &GetMesh() const { return mesh; }
     protected:
         void Build() { mesh = ConstructMesh(attributes); }
+        void AddVertex(std::vector<float> &vertices, const VertexAttributeTypeLayout &attributes, glm::vec3 position, glm::vec2 texCoords, glm::vec3 normal, glm::vec3 tangent, glm::vec3 bitangent) const;
     private:
         virtual Mesh ConstructMesh(const VertexAttributeTypeLayout &attributes) const = 0;
 };

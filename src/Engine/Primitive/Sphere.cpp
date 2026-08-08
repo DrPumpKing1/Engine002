@@ -32,7 +32,7 @@ Mesh Sphere::ConstructMesh(const VertexAttributeTypeLayout &attributes) const {
 
             glm::vec2 texCoords(u, v);
 
-            glm::vec3 normal = glm::normalize(position);
+            glm::vec3 normal(sinTheta * cosPhi, cosTheta, sinTheta * sinPhi);
 
             glm::vec3 tangent(
                 -radius * sinTheta * sinPhi,
@@ -46,59 +46,22 @@ Mesh Sphere::ConstructMesh(const VertexAttributeTypeLayout &attributes) const {
             }
             tangent = glm::normalize(tangent);
 
-            glm::vec3 bitangent(
-                radius * cosTheta * cosPhi,
-                -radius * sinTheta,
-                radius * cosTheta * sinPhi);
-            bitangent = glm::normalize(bitangent);
+            glm::vec3 bitangent(cosTheta * cosPhi, -sinTheta, cosTheta * sinPhi);
 
             tangent = glm::normalize(tangent - normal * glm::dot(normal, tangent));
             bitangent = glm::cross(normal, tangent);
 
-            for (auto attribType : attributes)
-            {
-                switch (attribType)
-                {
-                case VertexAttributeType::POSITION2D:
-                    vertices.push_back(position[0]);
-                    vertices.push_back(position[1]);
-                    break;
-                case VertexAttributeType::POSITION3D:
-                    vertices.push_back(position[0]);
-                    vertices.push_back(position[1]);
-                    vertices.push_back(position[2]);
-                    break;
-                case VertexAttributeType::TEXCOORD:
-                    vertices.push_back(texCoords[0]);
-                    vertices.push_back(texCoords[1]);
-                    break;
-                case VertexAttributeType::NORMAL:
-                    vertices.push_back(normal[0]);
-                    vertices.push_back(normal[1]);
-                    vertices.push_back(normal[2]);
-                    break;
-                case VertexAttributeType::TANGENT:
-                    vertices.push_back(tangent[0]);
-                    vertices.push_back(tangent[1]);
-                    vertices.push_back(tangent[2]);
-                    break;
-                case VertexAttributeType::BITANGENT:
-                    vertices.push_back(bitangent[0]);
-                    vertices.push_back(bitangent[1]);
-                    vertices.push_back(bitangent[2]);
-                    break;
-                }
-            }
+            AddVertex(vertices, attributes, position, texCoords, normal, tangent, bitangent);
         }
     }
 
-    int rows = segments + 1;
+    int rowsSize = segments + 1;
     for (int ring = 0; ring < rings; ring++)
     {
         for (int seg = 0; seg < segments; seg++)
         {
-            int current = ring * rows + seg;
-            int next = current + rows;
+            int current = ring * rowsSize + seg;
+            int next = current + rowsSize;
 
             indices.push_back(current);
             indices.push_back(current + 1);

@@ -66,8 +66,13 @@ SET(MESH
 SET(PRIMITIVE
     "src/Engine/Primitive/Primitive.h"
     "src/Engine/Primitive/Shape.h"
+    "src/Engine/Primitive/Shape.cpp"
     "src/Engine/Primitive/Sphere.h"
     "src/Engine/Primitive/Sphere.cpp"
+    "src/Engine/Primitive/Cylinder.h"
+    "src/Engine/Primitive/Cylinder.cpp"
+    "src/Engine/Primitive/Cube.h"
+    "src/Engine/Primitive/Cube.cpp"
 )
 
 SET(ENGINE
