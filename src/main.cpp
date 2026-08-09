@@ -14,6 +14,7 @@
 #include <iostream>
 
 #include "Engine/Engine.h"
+#include "Engine/Texture/Texture.h"
 #include "Utils/Utils.h"
 
 const unsigned int samples {4};
@@ -70,7 +71,7 @@ int main(void) {
       Sphere sphere(Vertex3DUnlit, 1.0f, 32, 32);
       Cylinder cylinder(Vertex3DUnlit, 1.0f, 2.5f, 32, 32);
       Cube cube(Vertex3DUnlit, 2.0f, 16, 16, 16);
-      const Mesh &mesh = cube.GetMesh();
+      const Mesh &mesh = cylinder.GetMesh();
       const DrawInfo &draw = mesh.GetDrawInfo();
 
       std::filesystem::path shadersPath = std::filesystem::current_path() / "resources" / "shaders";
@@ -86,6 +87,11 @@ int main(void) {
       CameraData cameraData;
       UniformBlock cameraMatrices("CameraData", 0, sizeof(CameraData), &cameraData);
       program.BindUniformBlock(cameraMatrices.GetBindingPoint(), cameraMatrices.GetName());
+
+      Sampler globalSampler;
+      std::filesystem::path texturesPath = std::filesystem::current_path() / "resources" / "textures";
+      std::filesystem::path imagePath = texturesPath / "brick.png";
+      Texture image(imagePath, TextureType::DIFFUSE, 0);
 
       glEnable(GL_CULL_FACE);
       glCullFace(GL_BACK);
@@ -123,6 +129,10 @@ int main(void) {
           program.Bind();
           cameraMatrices.Bind();
           program.SetMat4("model", model);
+          program.SetInt("image", image.GetUnit());
+
+          globalSampler.Bind(image.GetUnit());
+          image.Bind();
 
           mesh.Bind();
           glDrawElements(GL_TRIANGLES, draw.indices, GL_UNSIGNED_INT, 0);

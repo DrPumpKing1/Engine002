@@ -16,8 +16,8 @@ enum class ShaderType {
     FRAGMENT
 };
 
-std::string ShaderTypeToString(const ShaderType &type);
-GLenum ShaderTypeToGL(const ShaderType &type);
+std::string ShaderTypeToString(ShaderType type);
+GLenum ShaderTypeToGL(ShaderType type);
 
 class Shader {
     private:
@@ -28,7 +28,7 @@ class Shader {
         mutable bool error;
 
     public:
-        Shader(const std::string &path, const ShaderType &type);
+        Shader(const std::string &path, ShaderType type);
         ~Shader();
 
         Shader(const Shader &other);

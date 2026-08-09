@@ -1,7 +1,8 @@
 #include "Shader.h"
 #include "../../Utils/FileReader/FileReader.h"
+#include <iostream>
 
-std::string ShaderTypeToString(const ShaderType &type) {
+std::string ShaderTypeToString(ShaderType type) {
     switch (type) {
         case ShaderType::COMPUTE:
             return "COMPUTE";
@@ -16,11 +17,12 @@ std::string ShaderTypeToString(const ShaderType &type) {
         case ShaderType::FRAGMENT:
             return "FRAGMENT";
         default:
+            std::cout << "ERROR::SHADER_TYPE_TO_STRING unknown type specified" << std::endl;
             return "UNKNOWN";
     }
 }
 
-GLenum ShaderTypeToGL(const ShaderType &type) {
+GLenum ShaderTypeToGL(ShaderType type) {
     switch (type) {
         case ShaderType::COMPUTE:
             return GL_COMPUTE_SHADER;
@@ -35,11 +37,12 @@ GLenum ShaderTypeToGL(const ShaderType &type) {
         case ShaderType::FRAGMENT:
             return GL_FRAGMENT_SHADER;
         default:
+            std::cout << "ERROR::SHADER_TYPE_TO_GL unknown type specified" << std::endl;
             throw std::invalid_argument("Unknown shader type");
     }
 }
 
-Shader::Shader(const std::string &path, const ShaderType &type) : type(type), error(false){
+Shader::Shader(const std::string &path, ShaderType type) : type(type), error(false){
     source = FileReader::ReadFile(path);
     Compile();
 }

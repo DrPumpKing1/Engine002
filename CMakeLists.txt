@@ -75,11 +75,19 @@ SET(PRIMITIVE
     "src/Engine/Primitive/Cube.cpp"
 )
 
+SET(TEXTURE
+    "src/Engine/Texture/Sampler.h"
+    "src/Engine/Texture/Sampler.cpp"
+    "src/Engine/Texture/Texture.h"
+    "src/Engine/Texture/Texture.cpp"
+)
+
 SET(ENGINE
     ${SHADER}
     ${CAMERA}
     ${MESH}
     ${PRIMITIVE}
+    ${TEXTURE}
     "src/Engine/Engine.h"
 )
 

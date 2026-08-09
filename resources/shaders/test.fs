@@ -6,7 +6,9 @@ in VS_OUT {
     vec2 TexCoords;
 } fs_in;
 
+uniform sampler2D image;
+
 void main() {
-    FragColor = vec4(fs_in.TexCoords.rg, 1.0, 1.0);
+    FragColor = texture(image, fs_in.TexCoords);
 }
 

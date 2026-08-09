@@ -3,3 +3,5 @@
 #include "Camera/Camera.h"
 #include "Mesh/Mesh.h"
 #include "Primitive/Primitive.h"
+#include "Texture/Texture.h"
+#include "Texture/Sampler.h"

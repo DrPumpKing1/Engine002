@@ -3,3 +3,5 @@
 /.cache
 .gdb_history
 .clang-format
+/resources
+!/resources/shaders
