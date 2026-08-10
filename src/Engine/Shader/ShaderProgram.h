@@ -4,6 +4,7 @@
 #include "ShaderUniforms.h"
 #include "UniformBlock.h"
 
+#include <vector>
 #include <unordered_map>
 
 class ShaderProgram {

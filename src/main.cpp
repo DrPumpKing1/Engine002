@@ -71,7 +71,7 @@ int main(void) {
       Sphere sphere(Vertex3DUnlit, 1.0f, 32, 32);
       Cylinder cylinder(Vertex3DUnlit, 1.0f, 2.5f, 32, 32);
       Cube cube(Vertex3DUnlit, 2.0f, 16, 16, 16);
-      const Mesh &mesh = cylinder.GetMesh();
+      const Mesh &mesh = cube.GetMesh();
       const DrawInfo &draw = mesh.GetDrawInfo();
 
       std::filesystem::path shadersPath = std::filesystem::current_path() / "resources" / "shaders";

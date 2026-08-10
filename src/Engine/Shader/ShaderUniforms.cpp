@@ -1,4 +1,5 @@
 #include "ShaderUniforms.h"
+#include <vector>
 #include <iostream>
 
 ShaderUniforms::ShaderUniforms() {
