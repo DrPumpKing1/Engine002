@@ -91,7 +91,7 @@ int main(void) {
       Sampler globalSampler;
       std::filesystem::path texturesPath = std::filesystem::current_path() / "resources" / "textures";
       std::filesystem::path imagePath = texturesPath / "brick.png";
-      Texture image(imagePath, TextureType::DIFFUSE, 0);
+      Texture image(imagePath.string(), TextureType::DIFFUSE, 0);
 
       glEnable(GL_CULL_FACE);
       glCullFace(GL_BACK);

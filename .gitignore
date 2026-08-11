@@ -1,7 +1,10 @@
 /build
 /lib
+/dll
 /.cache
 .gdb_history
 .clang-format
 /resources
 !/resources/shaders
+/includes/glm
+/includes/assimp
