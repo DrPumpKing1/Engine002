@@ -14,7 +14,6 @@
 #include <iostream>
 
 #include "Engine/Engine.h"
-#include "Engine/Texture/Texture.h"
 #include "Utils/Utils.h"
 
 const unsigned int samples {4};
@@ -74,7 +73,7 @@ int main(void) {
       const Mesh &mesh = cube.GetMesh();
       const DrawInfo &draw = mesh.GetDrawInfo();
 
-      std::filesystem::path shadersPath = std::filesystem::current_path() / "resources" / "shaders";
+      std::filesystem::path shadersPath = GetResourcesPath() / "shaders";
       std::filesystem::path vertexShaderPath = shadersPath / "test.vs";
       std::filesystem::path fragmentShaderPath = shadersPath / "test.fs";
       Shader vertex(vertexShaderPath.string(), ShaderType::VERTEX);
@@ -89,7 +88,7 @@ int main(void) {
       program.BindUniformBlock(cameraMatrices.GetBindingPoint(), cameraMatrices.GetName());
 
       Sampler globalSampler;
-      std::filesystem::path texturesPath = std::filesystem::current_path() / "resources" / "textures";
+      std::filesystem::path texturesPath = GetResourcesPath() / "textures";
       std::filesystem::path imagePath = texturesPath / "brick.png";
       Texture image(imagePath.string(), TextureType::DIFFUSE, 0);
 

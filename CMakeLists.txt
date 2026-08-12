@@ -43,9 +43,15 @@ SET(DEBUG_SRC
     "src/Utils/Debug/Debug.cpp"
 )
 
+SET(EXECUTABLE_PATH
+    "src/Utils/ExecutablePath/ExecutablePath.h"
+    "src/Utils/ExecutablePath/ExecutablePath.cpp"
+)
+
 SET(UTILS 
     ${FILE_READER}
     ${DEBUG_SRC}
+    ${EXECUTABLE_PATH}
     "src/Utils/Utils.h"
 )
 
