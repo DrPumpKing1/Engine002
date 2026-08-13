@@ -1,9 +1,10 @@
 #include "UniformBlock.h"
-#include <iostream>
+#include "../../Utils/Logger/Logger.h"
 
 UniformBlock::UniformBlock(const std::string &name, GLuint bindingPoint, size_t size, const void *data) : name(name), bindingPoint(bindingPoint), size(size), lazy(false) {
     if(size == 0) {
-        std::cout << "WARNING::UNIFORM_BLOCK of name: " << name << " have zero size, defaulted to lazy initialization" << std::endl; 
+        LOG("WARNING::UNIFORM_BLOCK of name: %s have zero size, defaulted to lazy initialization", name.c_str());
+
         ID = 0;
         lazy = true;
         return;
@@ -70,7 +71,7 @@ UniformBlock& UniformBlock::operator=(UniformBlock &&other) noexcept {
 
 void UniformBlock::Bind() const {
     if(lazy) {
-        std::cout << "WARNING::UNIFORM_BLOCK_BIND it has not been initialized yet";
+        LOG("WARNING::UNIFORM_BLOCK_BIND it has not been initialized yet");
         return;
     }
     glBindBufferBase(GL_UNIFORM_BUFFER, bindingPoint, ID);
@@ -82,18 +83,18 @@ void UniformBlock::Unbind() const {
 
 void UniformBlock::UpdateData(const void *data, size_t dataSize, size_t offset) {
     if(dataSize == 0) {
-        std::cout << "WARNING::UNIFORM_BLOCK_UPDATE_DATA of name: " << name << " is trying to be updated with size zero data, aborting update." << std::endl; 
+        LOG("WARNING::UNIFORM_BLOCK_UPDATE_DATA of name: %s is trying to be updated with size zero data, aborting update.", name.c_str());
         return;
     }
     if(lazy) {
         size = dataSize + offset;
         SetupStorage(nullptr);
     } else if(!IsValid()) {
-        std::cout << "WARNING::UNIFORM_BLOCK_UPDATE_DATA of name: " << name << " is not valid to update, aborting update." << std::endl; 
+        LOG("WARNING::UNIFORM_BLOCK_UPDATE_DATA of name: %s is not valid to update, aborting update.", name.c_str());
         return;
     }
     if(dataSize + offset > size) {
-        std::cout << "WARNING::UNIFORM_BLOCK_UPDATE_DATA of name: " << name << " size and offset to update are out of bounds of buffer, aborting update." << std::endl; 
+        LOG("WARNING::UNIFORM_BLOCK_UPDATE_DATA of name: %s size and offset to update are out of bounds of buffer, aborting update.", name.c_str()); 
         return;
     }
     glNamedBufferSubData(ID, offset, dataSize, data);

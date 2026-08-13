@@ -1,10 +1,13 @@
 #include "FileReader.h"
+#include <fstream>
+#include <sstream>
+#include "../Logger/Logger.h"
 
 std::string FileReader::ReadFile(const std::string &filePath) {
     static const std::string empty = "";
     std::ifstream file(filePath);
     if(!file) {
-        std::cerr << "Failed to open file: " << filePath << std::endl;
+        LOG("ERROR::FILE_READER Failed to open file: %s", filePath.c_str());
         return empty;
     }
     file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
@@ -15,7 +18,7 @@ std::string FileReader::ReadFile(const std::string &filePath) {
         std::string content = buffer.str();
         return content;
     } catch(std::ifstream::failure &exception) {
-        std::cerr << "Error reading from file: " << exception.what() << std::endl;
+        LOG("ERROR::FILE_READER Failed when reading from file\n%s", exception.what());
         return empty;
     }
 }

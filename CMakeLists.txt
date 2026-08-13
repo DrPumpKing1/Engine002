@@ -48,10 +48,16 @@ SET(EXECUTABLE_PATH
     "src/Utils/ExecutablePath/ExecutablePath.cpp"
 )
 
+SET(LOGGER
+    "src/Utils/Logger/Logger.h"
+    $<$<CONFIG:Debug>:src/Utils/Logger/Logger.cpp>
+)
+
 SET(UTILS 
     ${FILE_READER}
     ${DEBUG_SRC}
     ${EXECUTABLE_PATH}
+    ${LOGGER}
     "src/Utils/Utils.h"
 )
 

@@ -1,6 +1,7 @@
 #include "Shader.h"
 #include "../../Utils/FileReader/FileReader.h"
-#include <iostream>
+#include "../../Utils/Logger/Logger.h"
+#include <stdexcept>
 
 std::string ShaderTypeToString(ShaderType type) {
     switch (type) {
@@ -17,7 +18,7 @@ std::string ShaderTypeToString(ShaderType type) {
         case ShaderType::FRAGMENT:
             return "FRAGMENT";
         default:
-            std::cout << "ERROR::SHADER_TYPE_TO_STRING unknown type specified" << std::endl;
+            LOG("ERROR::SHADER_TYPE_TO_STRING unknown type specified");
             return "UNKNOWN";
     }
 }
@@ -37,7 +38,7 @@ GLenum ShaderTypeToGL(ShaderType type) {
         case ShaderType::FRAGMENT:
             return GL_FRAGMENT_SHADER;
         default:
-            std::cout << "ERROR::SHADER_TYPE_TO_GL unknown type specified" << std::endl;
+            LOG("ERROR::SHADER_TYPE_TO_GL unknown type specified");
             throw std::invalid_argument("Unknown shader type");
     }
 }
@@ -109,7 +110,7 @@ void Shader::CheckCompileErrors() const {
     if(!success) {
         error = true;
         glGetShaderInfoLog(ID, SHADER_INFO_LOG_SIZE, nullptr, infoLog);
-        std::cerr <<  "ERROR::SHADER_COMPILATION failed of type: " << ShaderTypeToString(type) << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl; 
+        LOG("ERROR::SHADER_COMPILATION failed of type: %s\n %s\n -- --------------------------------------------------- -- ", ShaderTypeToString(type).c_str(), infoLog);
     }
 }
 

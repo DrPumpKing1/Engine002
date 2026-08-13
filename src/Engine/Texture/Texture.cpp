@@ -1,6 +1,7 @@
 #include "Texture.h"
-#include <iostream>
 #include <algorithm>
+#include "../../Utils/Logger/Logger.h"
+#include <stdexcept>
 
 GLint Texture::maxCombinedUnits = 0;
 
@@ -18,7 +19,7 @@ std::string TextureTypeToString(TextureType type) {
         case TextureType::DISPLACEMENT:
             return "displacement";
         default:
-            std::cerr << "ERROR::TEXTURE_TYPE_TO_STRING unknown type specified" << std::endl;
+            LOG("ERROR::TEXTURE_TYPE_TO_STRING unknown type specified");
             throw std::invalid_argument("Invalid TextureType");
     }
 }
@@ -29,7 +30,7 @@ Texture::Texture(const std::string &path, TextureType type, GLuint unit) : type(
     int channels;
     unsigned char* data = stbi_load(path.c_str(), &width, &height, &channels, 0);
     if(!data) {
-        std::cerr << "ERROR::TEXTURE_LOAD failed to load texture from: " << path << std::endl;
+        LOG("ERROR::TEXTURE_LOAD failed to load texture from: %s", path.c_str());
         throw std::runtime_error("Failed to load texture: " + path);
     }
 
@@ -57,13 +58,13 @@ Texture::Texture(const std::string &path, TextureType type, GLuint unit) : type(
                 internalformat = GL_SRGB8_ALPHA8;
             } else {
                 stbi_image_free(data);
-                std::cerr << "ERROR::TEXTURE_CONFIG unsupported number of color channels in texture from: " << path << std::endl;
+                LOG("ERROR::TEXTURE_CONFIG unsupported number of color channels in texture from: %s", path.c_str());
                 throw std::invalid_argument("Unsupported number of color channels in texture");
             }
             break;
         default:
             stbi_image_free(data);
-            std::cerr << "ERROR::TEXTURE_CONFIG automatic texture recognition failed in texture from: " << path << std::endl;
+            LOG("ERROR::TEXTURE_CONFIG automatic texture recognition failed in texture from: %s", path.c_str());
             throw std::invalid_argument("Automatic Texture type recognition failed");
     }
 
@@ -75,7 +76,7 @@ Texture::Texture(const std::string &path, TextureType type, GLuint unit) : type(
         format = GL_RGBA;
     } else {
         stbi_image_free(data);
-        std::cerr << "ERROR::TEXTURE_CONFIG unsupported number of color channels in texture from: " << path << std::endl;
+        LOG("ERROR::TEXTURE_CONFIG unsupported number of color channels in texture from: %s", path.c_str());
         throw std::invalid_argument("Unsupported number of color channels in texture");
     }
 
@@ -127,7 +128,7 @@ void Texture::Unbind() const {
 
 void Texture::SetUnit(GLuint newUnit) {
     if(binded) {
-        std::cout << "WARNING::TEXTURE_SET_UNIT cannot change unit of texture while it is binded, operation aborted" << std::endl;
+        LOG("WARNING::TEXTURE_SET_UNIT cannot change unit of texture while it is binded, operation aborted");
         return;
     }
     if(!maxCombinedUnits)

@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-BUILD_TYPE="${BUILD_TYPE:-release}"         # debug or release build
+BUILD_TYPE="${BUILD_TYPE:-Release}"         # debug or release build
 LOCAL_SRC="/local-src"                      # workspace where the source is mounted
 WORK_DIR="/workspace"                       # workspace where the build will take place
 OUTPUT_DIR="/output"                        # output binaries directory
 
 # Preset
-if [[ "${BUILD_TYPE}" == "debug" ]]; then
+if [[ "${BUILD_TYPE}" == "Debug" ]]; then
     PRESET="linux-debug"
 else
     PRESET="linux-release"

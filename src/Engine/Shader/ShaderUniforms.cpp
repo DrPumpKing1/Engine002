@@ -1,6 +1,6 @@
 #include "ShaderUniforms.h"
 #include <vector>
-#include <iostream>
+#include "../../Utils/Logger/Logger.h"
 
 ShaderUniforms::ShaderUniforms() {
     locations.reserve(UNIFORM_CACHE_INITIAL_SIZE);
@@ -19,7 +19,7 @@ void ShaderUniforms::SetShaderProgram(GLuint program) {
                 locations[name] = newLocation;
             else {
                 toErase.push_back(name);
-                std::cout << "WARNING::UNIFORM_LOCATION_NOT_FOUND of name: " << name << "\n While cache invalidating, probably new shader program was not a copy from the previous one" << std::endl;
+                LOG("WARNING::UNIFORM_LOCATION_NOT_FOUND of name: %s\n While cache invalidating, probably new shader program was not a copy from the previous one", name.c_str());
             }
         }
         for(const auto &name : toErase) {
@@ -35,7 +35,7 @@ GLint ShaderUniforms::GetUniformLocation(const std::string &name) const {
         if(location != -1) {
             locations[name] = location;
         } else {
-            std::cout << "WARNING::UNIFORM_LOCATION_NOT_FOUND of name: " << name << std::endl;
+            LOG("WARNING::UNIFORM_LOCATION_NOT_FOUND of name: %s", name.c_str());
         }
         return location;
     }

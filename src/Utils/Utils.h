@@ -2,3 +2,4 @@
 #include "FileReader/FileReader.h"
 #include "Debug/Debug.h"
 #include "ExecutablePath/ExecutablePath.h"
+#include "Logger/Logger.h"

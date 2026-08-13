@@ -1,12 +1,12 @@
 #include "Mesh.h"
-#include <iostream>
+#include "../../Utils/Logger/Logger.h"
 #include "VertexAttribute.h"
 
 Mesh::Mesh() : VAO(0), VBO(0), EBO(0), instances(0) {}
 
 Mesh::Mesh(const VertexLayout &layout, const std::vector<float> &vertices, const std::vector<unsigned int> &indices, unsigned int instances) : layout(layout), vertices(vertices), indices(indices), instances(instances) {
     if(!CreateBuffers(nullptr)) {
-        std::cout << "WARNING::MESH_CONSTRUCTOR, mesh could not be constructed" << std::endl;
+        LOG("WARNING::MESH_CONSTRUCTOR, mesh could not be constructed");
     }
 }
 
@@ -16,7 +16,7 @@ Mesh::~Mesh() {
 
 Mesh::Mesh(const Mesh &other) : layout(other.layout), vertices(other.vertices), indices(other.indices), instances(other.instances) {
     if(!CreateBuffers(&other)) {
-        std::cout << "WARNING::MESH_COPY_CONSTRUCTOR, mesh could not be constructed from copy source" << std::endl;
+        LOG("WARNING::MESH_COPY_CONSTRUCTOR, mesh could not be constructed from copy source");
     }
 }
 
@@ -30,7 +30,7 @@ Mesh& Mesh::operator=(const Mesh &other) {
     instances = other.instances;
 
     if(!CreateBuffers(&other)) {
-        std::cout << "WARNING::MESH_COPY_ASSIGNMENT, mesh could not be constructed from copy source" << std::endl;
+        LOG("WARNING::MESH_COPY_ASSIGNMENT, mesh could not be constructed from copy source");
     }
 
     return *this;
@@ -68,7 +68,7 @@ Mesh& Mesh::operator=(Mesh &&other) noexcept {
 
 void Mesh::Bind() const {
     if(!IsValid())
-        std::cout << "WARNING::MESH_BIND mesh is not valid to bind, vertex array buffer binding aborted" << std::endl;
+        LOG("WARNING::MESH_BIND mesh is not valid to bind, vertex array buffer binding aborted");
     glBindVertexArray(VAO);
 }
 
@@ -82,13 +82,13 @@ bool Mesh::CreateBuffers(const Mesh *source) {
 
     if (vertexSize == 0 || elementsSize == 0) {
         VAO = VBO = EBO = 0;
-        std::cout << "WARNING::MESH_ALLOCATION mesh has no vertices or indices, mesh voided" << std::endl;
+        LOG("WARNING::MESH_ALLOCATION mesh has no vertices or indices, mesh voided");
         return false;
     }
 
     if (source && !source->IsValid()) {
         VAO = VBO = EBO = 0;
-        std::cout << "WARNING::MESH_ALLOCATION source mesh is not valid, copy aborted, mesh voided" << std::endl;
+        LOG("WARNING::MESH_ALLOCATION source mesh is not valid, copy aborted, mesh voided");
         return false;
     }
 

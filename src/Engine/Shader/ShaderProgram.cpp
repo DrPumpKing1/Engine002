@@ -1,5 +1,6 @@
 #include "ShaderProgram.h"
-#include <iostream>
+#include "../../Utils/Logger/Logger.h"
+#include "Shader.h"
 
 ShaderProgram::ShaderProgram() : compiled(false), error(false) {
     ID = glCreateProgram();
@@ -129,10 +130,10 @@ void ShaderProgram::AttachShader(Shader &&shader) {
         if(success) {
             attachments.emplace(shaderType, std::move(shader));
         } else {
-            std::cerr << "ERROR::SHADER_PROGRAM_ATTACHMENT failed of type: " << ShaderTypeToString(shaderType) << "\n Shader attachment failed, shader was not valid or had erros" << std::endl;
+            LOG("ERROR::SHADER_PROGRAM_ATTACHMENT failed of type: %s\n Shader attachment failed, shader was not valid or had erros", ShaderTypeToString(shaderType).c_str());
         }
     } else {
-        std::cerr << "ERROR::SHADER_PROGRAM_ATTACHMENT failed of type: " << ShaderTypeToString(shaderType) << "\n Another shader of the same type has been already attached" << std::endl;
+        LOG("ERROR::SHADER_PROGRAM_ATTACHMENT failed of type: %s\n Another shader of the same type has been already attached", ShaderTypeToString(shaderType).c_str());
     }
 }
 
@@ -144,7 +145,7 @@ void ShaderProgram::Compile() {
 
 void ShaderProgram::Bind() const {
     if(error || !HasBeenCompiled() || !IsValid()) {
-        std::cout << "WARNING::SHADER_PROGRAM_BIND is not suitable for using";
+        LOG("WARNING::SHADER_PROGRAM_BIND is not suitable for using");
         return;
     }
     glUseProgram(ID);
@@ -156,19 +157,19 @@ void ShaderProgram::Unbind() {
 
 void ShaderProgram::BindUniformBlock(GLuint bindingPoint, const std::string &blockName) {
     if(!IsValid()) {
-        std::cout << "WARNING_SHADER_PROGRAM_BIND_UNIFORM_BLOCK shader program is not valid, uniform block binding aborted" << std::endl;
+        LOG("WARNING_SHADER_PROGRAM_BIND_UNIFORM_BLOCK shader program is not valid, uniform block binding aborted");
         return;
     }
     if(!HasBeenCompiled()) {
-        std::cout << "WARNING_SHADER_PROGRAM_BIND_UNIFORM_BLOCK shader program has not been compiled yet, uniform block binding aborted" << std::endl;
+        LOG("WARNING_SHADER_PROGRAM_BIND_UNIFORM_BLOCK shader program has not been compiled yet, uniform block binding aborted");
         return;
     }
 #ifdef DEBUG
     for(const auto &binding : uniformBlocks) {
         if(bindingPoint == binding.bindingPoint)
-            std::cout << "WARNING::SHADER_PROGRAM_BIND_UNIFORM_BLOCK uniform block of name: " << binding.uniformBlockName << " is already binded to binding point: " << bindingPoint << ", overwrite binding point with uniform block of name: " << blockName << std::endl;
+            LOG("WARNING::SHADER_PROGRAM_BIND_UNIFORM_BLOCK uniform block of name: %s is already binded to binding point: %u, overwrite binding point with uniform block of name: %s", binding.uniformBlockName.c_str(), static_cast<unsigned int>(bindingPoint), blockName.c_str());
         if(blockName == binding.uniformBlockName)
-            std::cout << "WARNING::SHADER_PROGRAM_BIND_UNIFORM_BLOCK there's already a uniform block of name: " << binding.uniformBlockName << " binded in the shader program" << std::endl;
+            LOG("WARNING::SHADER_PROGRAM_BIND_UNIFORM_BLOCK there's already a uniform block of name: %s binded in the shader program", binding.uniformBlockName.c_str());
     }
 #endif
     GLuint blockIndex = glGetUniformBlockIndex(ID, blockName.c_str());
@@ -183,7 +184,7 @@ void ShaderProgram::CheckLinkErrors() const {
     if(!success) {
         error = true;
         glGetProgramInfoLog(ID, SHADER_INFO_LOG_SIZE, nullptr, infoLog);
-        std::cerr << "ERROR::SHADER_PROGRAM_LINKING failed:\n" << infoLog << std::endl;
+        LOG("ERROR::SHADER_PROGRAM_LINKING failed:\n%s", infoLog);
     }
 }
 
